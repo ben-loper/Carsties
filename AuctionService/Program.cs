@@ -1,4 +1,5 @@
 using AuctionService.Data;
+using AuctionService.Errors;
 using Mapster;
 using Microsoft.EntityFrameworkCore;
 
@@ -15,6 +16,9 @@ builder.Services.AddDbContext<AuctionDbContext>(options =>
     options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection"));
 });
 
+builder.Services.AddExceptionHandler<GlobalExceptionHandler>();
+builder.Services.AddProblemDetails();
+
 var app = builder.Build();
 
 // Initialize the database because doing this each time would be rough
@@ -28,6 +32,7 @@ catch (Exception e)
 }
 
 // Configure the HTTP request pipeline.
+app.UseExceptionHandler();
 
 app.MapControllers();
 

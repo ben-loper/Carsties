@@ -49,6 +49,8 @@ public class AuctionsController(AuctionDbContext context) : ControllerBase
     [HttpPut("{id}")]
     public async Task<ActionResult> UpdateAuction([FromBody] UpdateAuctionRequestDto dto, string id)
     {
+        if (dto.Make == "foo") throw new Exception("bar");
+        
         var auction = await context.Auctions
             .Include(auction => auction.Item)
             .FirstOrDefaultAsync(auction => auction.Id == id);
